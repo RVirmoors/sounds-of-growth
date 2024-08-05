@@ -28,20 +28,20 @@ AM2302::AM2302_Sensor sensor_arr[SIZE] = {
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(9600);
   while(!Serial) {
     yield();
   }
-  Serial.print(">>> Test Sensor Array of AM2302 (DHT22) Sensors <<<\n\n");
-  delay(5000);
+//  Serial.print(">>> Test Sensor Array of AM2302 (DHT22) Sensors <<<\n\n");
+//  delay(5000);
 
   for (size_t i = 0; i < SIZE; ++i) {
-    Serial.print("Sensor ");
-    Serial.print(i);
-    Serial.print(" available - ");
+//    Serial.print("Sensor ");
+//    Serial.print(i);
+//    Serial.print(" available - ");
     Serial.println(sensor_arr[i].begin());
   }
-  Serial.print("\n");
+//  Serial.print("\n");
   delay(1000);
 }
 
@@ -55,14 +55,19 @@ void loop() {
 //  }
 //  Serial.print("\n\tTemperature   : ");
   for (size_t i = 0; i < SIZE; ++i) {
-    Serial.print(sensor_arr[i].get_Temperature());
+    AM2302::AM2302_Sensor::get_sensorState(sensor_arr[i].read());
+    int temp = int((sensor_arr[i].get_Temperature() + 0.005) * 100);
+    Serial.print(temp);
     Serial.print(" ");
   }
 //  Serial.print("\n\tHumidity      : ");
-  for (size_t i = 0; i < SIZE; ++i) {
-    Serial.print(sensor_arr[i].get_Humidity());
+  for (size_t i = 0; i < SIZE-1; ++i) {
+    int hum = int((sensor_arr[i].get_Humidity() + 0.005) * 100);
+    Serial.print(hum);
     Serial.print(" ");
   }
-  Serial.print("\n");
-  delay(5000);
+  // last
+  int hum = int((sensor_arr[SIZE-1].get_Humidity() + 0.005) * 100);
+  Serial.println(hum);
+  delay(1000);
 }
